@@ -4,7 +4,7 @@
   <img src="./picture.gif@480w_480h.webp" alt="耄耋梗猫照片" width="280">
 </p>
 
-<h2 align="center">哈基米爱科研</h2>
+<h2 align="center">哈基米爱科研！！！</h2>
 
 
 `autoresearch` 是一个面向深度学习实验自动化的 Codex skill。
