@@ -1,13 +1,13 @@
 # Autoresearch Skill
 
 <p align="center">
-  <img src="https://gengtu.tos-accelerate.volces.com/memes/c8/78/5d/63/c8785d631e120fed3e3390085ab730fb.png?x-tos-process=style%2Fm" alt="Maodie meme cat" width="280">
+  <img src="./f17748cf3cd7c1bec26293dc1e40ec32455173280.gif@480w_480h.webp" alt="Maodie meme cat" width="280">
 </p>
 
 <h2 align="center">哈基米爱科研</h2>
 
 <p align="center">
-  Meme reference: <a href="https://gengtu.net/memes/origin/mao-die/">Gengtu.net, Maodie meme entry</a>.
+  Local meme image: <code>f17748cf3cd7c1bec26293dc1e40ec32455173280.gif@480w_480h.webp</code>.
 </p>
 
 `autoresearch` is a Codex skill for running automated or semi-automated deep learning research loops.
