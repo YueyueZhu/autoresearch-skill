@@ -6,9 +6,6 @@
 
 <h2 align="center">哈基米爱科研</h2>
 
-<p align="center">
-  Local meme image: <code>f17748cf3cd7c1bec26293dc1e40ec32455173280.gif@480w_480h.webp</code>.
-</p>
 
 `autoresearch` is a Codex skill for running automated or semi-automated deep learning research loops.
 
