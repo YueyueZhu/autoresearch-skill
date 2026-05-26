@@ -1,65 +1,198 @@
-# Autoresearch Skill 中文说明
+# Autoresearch Skill
 
 <p align="center">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/9/9b/Mao_Tse_Tung.jpg" alt="毛泽东主席照片" width="260">
+  <img src="https://gengtu.tos-accelerate.volces.com/memes/c8/78/5d/63/c8785d631e120fed3e3390085ab730fb.png?x-tos-process=style%2Fm" alt="Maodie meme cat" width="280">
 </p>
 
-<h2 align="center">世界是你们滴</h2>
+<h2 align="center">哈基米爱科研</h2>
 
 <p align="center">
-  图片来源：<a href="https://commons.wikimedia.org/wiki/File:Mao_Tse_Tung.jpg">Wikimedia Commons, Mao Tse Tung.jpg</a>。
+  Meme reference: <a href="https://gengtu.net/memes/origin/mao-die/">Gengtu.net, Maodie meme entry</a>.
 </p>
 
-`autoresearch` 是一个面向深度学习实验自动化的 Codex skill。
+`autoresearch` is a Codex skill for running automated or semi-automated deep learning research loops.
 
-它会在你的项目运行目录中创建并维护 `AUTORESEARCH.md`，把任务目标、运行命令、日志、指标、允许修改范围、每次实验的假设和结果全部记录下来。这样即使网络中断、Codex 重启，也可以从这个文件恢复。
+It is designed for long experiments where one run may take hours, the network may disconnect, and the agent must remember exactly what it changed, why it changed it, how the experiment was launched, and whether the result should be kept or discarded.
 
-## 功能
+The central idea is simple:
 
-- 启动时询问工作目录、任务、指标、运行命令、GPU、tmux、允许修改的代码范围。
-- 创建持久化的 `AUTORESEARCH.md`。
-- 当用户提供论文、方法或 GitHub 仓库时，优先查看官方 GitHub 实现。
-- 每个实验 idea 都要求写明新颖性，目标是达到 NeurIPS、ICLR、CVPR、AAAI 等顶级会议级别的研究标准。
-- 只修改用户允许的文件或代码区域。
-- 默认使用 tmux 运行长时间训练。
-- 从日志中解析最新指标和最佳指标。
-- 将实验标记为 `keep`、`discard`、`crash` 或 `running`。
-- 记录每次实验的假设、代码修改、结果和决策。
+> Create an `AUTORESEARCH.md` file inside the project run directory and treat it as the persistent source of truth for the whole research loop.
 
-## 典型使用方式
+## What This Skill Is For
+
+Use this skill when you want Codex to help improve a deep learning project through iterative experiments, such as:
+
+- improving segmentation Dice or IoU
+- improving classification accuracy, F1, or AUC
+- reducing validation loss or perplexity
+- redesigning a loss function
+- testing a semi-supervised, weakly supervised, or self-supervised idea
+- adapting ideas from papers or GitHub repositories into your own training code
+- running long experiments in tmux and resuming after interruptions
+
+The skill is not tied to any specific framework. It can be adapted to PyTorch, MONAI, TensorFlow, JAX, Lightning, custom trainers, shell scripts, or ordinary Python training entrypoints.
+
+## Core Behavior
+
+When triggered, the skill guides Codex to:
+
+1. Ask for the deep learning project run directory.
+2. Ask for the task, metric, current best result, and target result.
+3. Ask whether each iteration should consider new papers or GitHub repositories.
+4. Prefer official GitHub implementations when a paper or method is referenced.
+5. Ask which command, Python file, or shell script should run the experiment.
+6. Offer to create a unified `.sh` runner when multiple commands are needed.
+7. Ask whether to use a reusable terminal, defaulting to tmux.
+8. Ask which files, functions, losses, modules, or code regions may be modified.
+9. Ask which GPU IDs are available.
+10. Create or update `AUTORESEARCH.md`.
+11. Propose one experiment at a time.
+12. Require every idea to include a top-conference-level novelty statement, targeting the ambition of NeurIPS, ICLR, CVPR, or AAAI-style work.
+13. Modify only the approved code surface.
+14. Launch the run, monitor logs, parse metrics, and record results.
+15. Mark each experiment as `keep`, `discard`, `crash`, or `running`.
+
+## Why `AUTORESEARCH.md` Matters
+
+Deep learning experiments are easy to lose track of. A useful run may take 4 to 7 hours. A network interruption can erase chat context. A failed idea may be repeated accidentally if the decision is not recorded.
+
+`AUTORESEARCH.md` solves this by recording:
+
+- project directory
+- task and metric
+- best known reference result
+- target result
+- run command
+- tmux session
+- log file
+- available GPUs
+- allowed edit surface
+- forbidden changes
+- files already read
+- current code path
+- experiment hypothesis
+- novelty statement
+- paper or GitHub references
+- exact code changes
+- launch time
+- best and latest metrics
+- keep/discard/crash decision
+
+If a session disconnects, resume with:
 
 ```text
-使用 autoresearch skill 处理这个深度学习项目。
-工作目录：/path/to/project
-任务：提升验证集 Dice。
-指标：mdice，越高越好。
-当前最好结果：0.824。
-运行命令：sh train.sh。
-使用 tmux session 0。
-允许修改范围：只修改 loss.py 里的 consistency_loss()。
-可用 GPU：0,1。
+Read /path/to/project/AUTORESEARCH.md and continue the automated autoresearch task.
 ```
 
-## 中断恢复
+## Research Standard
 
-如果网络中断或 Codex 重启，使用：
+This skill asks Codex to avoid shallow trial-and-error whenever possible.
+
+Each experiment should have one main research idea and a clear novelty statement. The goal is not merely to tweak a threshold, but to propose a mechanism that could plausibly become a meaningful contribution, such as:
+
+- uncertainty-aware consistency learning
+- dynamic curriculum schedules
+- teacher-student disagreement modeling
+- topology-aware or boundary-aware losses
+- class-imbalance-aware pseudo-label filtering
+- contrastive objectives for representation alignment
+- confidence calibration inside weak supervision
+- robust training under noisy labels or mixed samples
+
+Small changes are allowed only when they test a larger mechanism.
+
+## Repository Layout
 
 ```text
-读取 /path/to/project/AUTORESEARCH.md，继续自动化 autoresearch 任务。
+autoresearch-skill/
+├── SKILL.md
+├── README.md
+├── README.zh-CN.md
+├── references/
+│   ├── AUTORESEARCH_TEMPLATE.md
+│   ├── INTERVIEW_QUESTIONS.md
+│   ├── ITERATION_PROTOCOL.md
+│   └── LOG_PARSING_GUIDE.md
+└── scripts/
+    ├── init_autoresearch.py
+    └── append_experiment.py
 ```
 
-## 文件说明
+## Files
 
-- `SKILL.md`：Codex 使用的 skill 主说明。
-- `references/AUTORESEARCH_TEMPLATE.md`：完整 `AUTORESEARCH.md` 模板。
-- `references/INTERVIEW_QUESTIONS.md`：启动时必须询问的问题。
-- `references/ITERATION_PROTOCOL.md`：每轮实验迭代协议。
-- `references/LOG_PARSING_GUIDE.md`：日志和指标解析指南。
-- `scripts/init_autoresearch.py`：可选脚本，用于生成初始 `AUTORESEARCH.md`。
-- `scripts/append_experiment.py`：可选脚本，用于追加实验记录。
+- `SKILL.md`: Codex-facing instructions for the skill.
+- `references/AUTORESEARCH_TEMPLATE.md`: full template for the persistent control document.
+- `references/INTERVIEW_QUESTIONS.md`: required startup questions.
+- `references/ITERATION_PROTOCOL.md`: keep/discard loop and experiment protocol.
+- `references/LOG_PARSING_GUIDE.md`: common metric parsing patterns.
+- `scripts/init_autoresearch.py`: helper script for creating a starter `AUTORESEARCH.md`.
+- `scripts/append_experiment.py`: helper script for appending experiment-log rows.
 
-## 适用范围
+## Prompt Template
 
-适用于任意深度学习工作流，例如医学图像分割、分类、检测、语言建模、半监督学习、自监督学习等。
+Copy and adapt this prompt when starting a new project:
 
-它不是只能用于原始的 `karpathy/autoresearch` 仓库，而是把 autoresearch 思想泛化到本地任意项目。
+```text
+Use the autoresearch skill for this deep learning project.
+
+Work directory:
+/absolute/path/to/my/project
+
+Task:
+Improve <metric or behavior>. Prioritize ideas that could be novel enough for NeurIPS, ICLR, CVPR, or AAAI. If I provide a paper or method, first look for the official GitHub implementation and adapt only the relevant idea.
+
+Metric:
+Primary metric is <metric_name>, and <higher/lower> is better.
+Current best result is <current_best>.
+Target result is <target_result>.
+
+Run command:
+<python train.py ... or sh train.sh>
+
+Log file:
+/absolute/path/to/log.txt
+
+Terminal:
+Use tmux by default. tmux session is <session_name_or_id>.
+
+GPU:
+Available GPU IDs are <gpu_ids>.
+
+Allowed edit surface:
+Only modify <file/function/loss/module/code region>.
+
+Forbidden changes:
+Do not change <dataset/evaluation metric/model/shell args/optimizer/etc.>.
+
+Automation:
+Create AUTORESEARCH.md in the work directory before changing code. Record all context, hypotheses, code changes, logs, metrics, and keep/discard decisions there. If the session disconnects, resume by reading AUTORESEARCH.md.
+```
+
+## Minimal Example
+
+```text
+Use the autoresearch skill.
+Work directory: /home/user/projects/segmentation-exp
+Task: improve validation mdice. Current best is 0.824, target is above 0.83.
+Metric: mdice, higher is better.
+Run command: sh train.sh.
+Log file: /home/user/projects/segmentation-exp/train.log.
+Use tmux session 0.
+Available GPUs: 0,1.
+Only modify losses.py, specifically consistency_loss().
+Before each iteration, ask me whether I have a paper or GitHub repository to add.
+```
+
+## Installation
+
+Copy this folder into your Codex skills directory:
+
+```bash
+cp -a autoresearch-skill ~/.codex/skills/autoresearch
+```
+
+Then start a new Codex request that mentions `autoresearch`.
+
+## Notes
+
+This repository packages a local Codex skill. The workflow is inspired by `karpathy/autoresearch`, but generalized for arbitrary deep learning projects.
