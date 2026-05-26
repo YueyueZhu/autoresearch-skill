@@ -1,10 +1,10 @@
 # Autoresearch Skill
 
 <p align="center">
-  <img src="./f17748cf3cd7c1bec26293dc1e40ec32455173280.gif@480w_480h.webp" alt="Maodie meme cat" width="280">
+  <img src="./picture.gif@480w_480h.webp" alt="Maodie meme cat" width="280">
 </p>
 
-<h2 align="center">哈基米爱科研</h2>
+<h2 align="center">Hakimi loves scientific research！！！</h2>
 
 
 `autoresearch` is a Codex skill for running automated or semi-automated deep learning research loops.
